@@ -18,18 +18,18 @@ public class Solucion {
   Random rnd = new Random(); // Auxiliar para tomar deciciones al azar.
 
   /**
-   * TODO: Considerar si se va a dejar o eliminar
-   * Constructor vacío de una solucion a un problema.
-   */  
-  public Solucion() {
-    listaCiudades = new LinkedList<>();
-  }
-
-  /**
    * Metodo constructor de una solucion a un problema, inicializa con una lista de Ciudades.
    */
   public Solucion(LinkedList<Ciudad> listaCiudades) {
     this.listaCiudades = new LinkedList(listaCiudades);
+    this.valor = evaluar();
+  }
+
+  /**
+   * Metodo constructor de una solucion a un problema, inicializa con otra solucion.
+   */
+  public Solucion(Solucion solucion) {
+    this.listaCiudades = new LinkedList(solucion.listaCiudades);
     this.valor = evaluar();
   }
 
@@ -49,26 +49,15 @@ public class Solucion {
    * @return evaluacion de la solucion
    */
   public float evaluar() {
-    valor = evaluarAux(new LinkedList<Ciudad>(listaCiudades));
-    valor += listaCiudades.getFirst().calculaDistancia(listaCiudades.getLast());
-    return valor;
-  }
-
-  /** 
-   * Método auxiliar recursivo que calcula el peso del camino 
-   * entre la ciudad al inicio y el final de listaCiudades
-   * @param listaCiudades La lista de la que se quiere calcular el peso del camino
-   * @return El peso del camino
-   */
-  private float evaluarAux(LinkedList<Ciudad> listaCiudades) {
-    if(listaCiudades.size() == 1) {
-      return 0;
-    } else {
-      Ciudad c1 = listaCiudades.get(0);
-      Ciudad c2 = listaCiudades.get(1);
-      listaCiudades.pop();
-      return c1.calculaDistancia(c2) + evaluarAux(listaCiudades);
+    valor = listaCiudades.getFirst().calculaDistancia(listaCiudades.getLast());
+    LinkedList<Ciudad> copia = (LinkedList<Ciudad>) listaCiudades.clone();
+    for(int i = 0; i < listaCiudades.size() - 1; i++) {
+      Ciudad c1 = copia.get(0);
+      Ciudad c2 = copia.get(1);
+      copia.pop();
+      valor += c1.calculaDistancia(c2);
     }
+    return valor;
   }
   
   /**

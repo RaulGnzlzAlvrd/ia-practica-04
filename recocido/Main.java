@@ -10,12 +10,12 @@ import java.io.IOException;
  */
 public class Main{
    	public static void main(String[] args) {
-    	int iteraciones = 100; // Número de iteraciones que se van a hacer.
-        String filePath = "Test.tsp"; // Nombre del archivo tsp con la lista de coordenadas de ciudades.
+    	int iteraciones = 1; // Número de iteraciones que se van a hacer.
+        String filePath = "Tanzania.tsp"; // Nombre del archivo tsp con la lista de coordenadas de ciudades.
         try {
         	RecocidoSimulado recocido = new RecocidoSimulado(iteraciones, filePath);
-        	Solucion s = recocido.ejecutar();
-        	out.println(s);
+        	Solucion solucion = recocido.ejecutar();
+        	out.println(solucion);
         } catch (IOException ioe) {
         	out.println("No se pudo leer el archivo.\n" + ioe);
         }

@@ -2,6 +2,7 @@ package recocido;
 
 import java.io.*;
 import java.util.LinkedList;
+import java.util.Random;
 
 /**
  * Interface con los metodos necesarios para implementar el metodo
@@ -11,12 +12,17 @@ import java.util.LinkedList;
  * @version 0.1
  */
 public class RecocidoSimulado {
-  float temperatura;
-  float valor;
-  float decaimiento;
+  private final float TEMPERATURA_INICIAL = (float) (Math.E + 10);
+  private final float TEMPERATURA_FINAL = 0.1f;
+  private final float FACTOR_DE_ENFRIAMIENTO = 0.99995f;
+
+  float temperatura = TEMPERATURA_INICIAL;
   int iteraciones;
 
   Solucion solucionInicial; // Solución con la que inicia la iteración.
+  Solucion mejorSolucion; // La mejor solución obtenidad a lo largo de todas las iteraciones.
+
+  Random rnd = new Random();
 
   /**
    * Inicializa los valores necesarios para realizar 
@@ -25,47 +31,66 @@ public class RecocidoSimulado {
    * @param filePath El nombre del archivo del que va a sacar las coordenadas de las ciudades
    */
   public RecocidoSimulado(int iteraciones, String filePath) throws IOException {
-    this.iteraciones = iteraciones;
     inicializaLista(filePath);
-    solucionInicial.shuffle();
+    mejorSolucion = solucionInicial;
+    this.iteraciones = iteraciones;
   }
 
   /**
-   * TODO: Implementar este método
-   * Funcion que calcula una nueva temperatura en base a
-   * la anterior y el decaemiento usado.
-   * @param temperatura, float con el valor actual 
-   * @param decaimiento, float que sera usado para hacer decaer el valor de temperatura
-   * @return nueva temperatura
+   * Funcion que actualiza la temperatura en base a
+   * la anterior y el factor de enfriamiento usado.
    */
-  public float nuevaTemperatura(float temperatura,float decaimiento) {
-    return 0;
+  public void actualizarTemperatura() {
+    temperatura *= FACTOR_DE_ENFRIAMIENTO;
   }
 
   /**
-   * TODO: Implementar este método
    * Genera y devuelve la solucion siguiente dependiendo de su valor
    * y de la probabilidad de elegir una solucion peor
-   * @param Solucion que sera usada como base para elegir a la siguiente
+   * @param solucion que sera usada como base para elegir a la siguiente
    * @return Solucion nueva
    */
-  public Solucion seleccionarSiguienteSolucion(Solucion s) {
-    return s.siguienteSolucion();
+  public Solucion seleccionarSiguienteSolucion(Solucion actual) {
+    Solucion siguiente = actual.siguienteSolucion();
+    if (siguiente.valor < actual.valor) {
+      actual = siguiente;
+      if (siguiente.valor < mejorSolucion.valor) {
+        mejorSolucion = siguiente;
+      }
+    } else if (probaAceptar(actual, siguiente) > rnd.nextFloat()) {
+      actual = siguiente;
+    }
+    return actual;
   }
 
   /**
-   * TODO: Implementar este método
+   * Calcula la probabilidad de aceptar una solucion peor  dependiendo de su diferencia 
+   * en el valor de dicha solución con la solución actual.
+   * @param actual La solución actual válida
+   * @param siguiente La siguiente solución que es peor que la actual
+   * @return La probabilidad de aceptar la solución peor
+   */
+  private float probaAceptar(Solucion actual, Solucion peor) {
+    float delta = peor.valor - actual.valor;
+    return (float) Math.pow(Math.E, (- delta) / temperatura);
+  }
+
+  /**
    * Ejecuta el algoritmo con los parametros con los que fue inicializado
    * devuelve una solucion.
-   * @param
    * @return Solucion al problema
    */
   public Solucion ejecutar() {
-    Solucion solucion = solucionInicial;
     for(int i = 0; i < iteraciones; i++) {
-      solucion = seleccionarSiguienteSolucion(solucion);
+      Solucion solucion = new Solucion(solucionInicial);
+      solucion.shuffle();
+      temperatura = TEMPERATURA_INICIAL;
+      while(temperatura > TEMPERATURA_FINAL){
+        solucion = seleccionarSiguienteSolucion(solucion);
+        actualizarTemperatura();
+      }
     }
-    return solucion;
+    return mejorSolucion;
   }
 
   /**
