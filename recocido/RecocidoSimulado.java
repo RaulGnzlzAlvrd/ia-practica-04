@@ -10,12 +10,12 @@ import java.util.LinkedList;
  * @author Benjamin Torres
  * @version 0.1
  */
-public class RecocidoSimulado{
+public class RecocidoSimulado {
   float temperatura;
   float valor;
   float decaimiento;
-  LinkedList<Ciudad> listaCiudades = new LinkedList<>();
-  String filePath;
+
+  Solucion solucionActual; // Solución actual de la iteración.
 
   /**
    * Inicializa los valores necesarios para realizar 
@@ -23,8 +23,8 @@ public class RecocidoSimulado{
    * @param filePath El nombre del archivo del que va a sacar las coordenadas de las ciudades
    */
   public RecocidoSimulado(String filePath) throws IOException {
-    this.filePath = filePath;
-    inicializaLista();
+    inicializaLista(filePath);
+    solucionActual.shuffle();
   }
 
   /**
@@ -34,7 +34,7 @@ public class RecocidoSimulado{
    * @param decaimiento, float que sera usado para hacer decaer el valor de temperatura
    * @return nueva temperatura
    */
-  public float nuevaTemperatura(float temperatura,float decaimiento){
+  public float nuevaTemperatura(float temperatura,float decaimiento) {
     return 0;
   }
 
@@ -44,7 +44,7 @@ public class RecocidoSimulado{
    * @param Solucion que sera usada como base para elegir a la siguiente
    * @return Solucion nueva
    */
-  public Solucion seleccionarSiguienteSolucion(Solucion s){
+  public Solucion seleccionarSiguienteSolucion(Solucion s) {
     return new Solucion();
   }
 
@@ -54,7 +54,7 @@ public class RecocidoSimulado{
    * @param
    * @return Solucion al problema
    */
-  public Solucion ejecutar(){
+  public Solucion ejecutar() {
     return new Solucion();
   }
 
@@ -63,15 +63,16 @@ public class RecocidoSimulado{
    * 
    * Para el formato del archivo se puede visitar la siguiente página:
    * http://www.math.uwaterloo.ca/tsp/world/dj38.tsp
-   * @param 
+   * @param filePath Path del archivo donde se está sacando los datos de las ciudades
    * @return
    */
-  private void inicializaLista() throws IOException {
+  private void inicializaLista(String filePath) throws IOException {
     File file = new File(filePath);
     if(!file.exists()) {
       throw new IOException("Archivo no encontrado.");
     }
 
+    LinkedList<Ciudad> listaCiudades = new LinkedList<>();
     BufferedReader fileReader = new BufferedReader(new FileReader(file));
     String row;
     Ciudad ciudad;
@@ -85,5 +86,6 @@ public class RecocidoSimulado{
       listaCiudades.add(ciudad);
     }
     fileReader.close();
+    solucionActual = new Solucion(listaCiudades);
   }
 }
