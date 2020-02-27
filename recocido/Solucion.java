@@ -15,7 +15,7 @@ public class Solucion {
   LinkedList<Ciudad> listaCiudades; // El orden de la lista define el orden en que se recorren las ciudades.
   float valor; // Valor de la solucion actual
 
-  Random rnd = new Random();
+  Random rnd = new Random(); // Auxiliar para tomar deciciones al azar.
 
   /**
    * TODO: Considerar si se va a dejar o eliminar
@@ -45,7 +45,6 @@ public class Solucion {
   }
 
   /**
-   * TODO: Implementar esta función
    * Asigna un valor a la solucion que invoca el metodo
    * @return evaluacion de la solucion
    */
@@ -55,6 +54,12 @@ public class Solucion {
     return valor;
   }
 
+  /** 
+   * Método auxiliar recursivo que calcula el peso del camino 
+   * entre la ciudad al inicio y el final de listaCiudades
+   * @param listaCiudades La lista de la que se quiere calcular el peso del camino
+   * @return El peso del camino
+   */
   private float evaluarAux(LinkedList<Ciudad> listaCiudades) {
     if(listaCiudades.size() == 1) {
       return 0;

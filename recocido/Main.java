@@ -9,11 +9,11 @@ import java.io.IOException;
  * @version 0.1
  */
 public class Main{
-   	public static void main(String []args) {
-    	int interaciones = 100; // Número de iteraciones que se van a hacer.
+   	public static void main(String[] args) {
+    	int iteraciones = 100; // Número de iteraciones que se van a hacer.
         String filePath = "Test.tsp"; // Nombre del archivo tsp con la lista de coordenadas de ciudades.
         try {
-        	RecocidoSimulado recocido = new RecocidoSimulado(filePath);
+        	RecocidoSimulado recocido = new RecocidoSimulado(iteraciones, filePath);
         	Solucion s = recocido.ejecutar();
         	out.println(s);
         } catch (IOException ioe) {

@@ -14,20 +14,24 @@ public class RecocidoSimulado {
   float temperatura;
   float valor;
   float decaimiento;
+  int iteraciones;
 
-  Solucion solucionActual; // Solución actual de la iteración.
+  Solucion solucionInicial; // Solución con la que inicia la iteración.
 
   /**
    * Inicializa los valores necesarios para realizar 
    * recocido simulado durante un numero determinado de iteraciones
+   * @param iteraciones El numero de iteraciones que se va a ejecutar el algoritmo
    * @param filePath El nombre del archivo del que va a sacar las coordenadas de las ciudades
    */
-  public RecocidoSimulado(String filePath) throws IOException {
+  public RecocidoSimulado(int iteraciones, String filePath) throws IOException {
+    this.iteraciones = iteraciones;
     inicializaLista(filePath);
-    solucionActual.shuffle();
+    solucionInicial.shuffle();
   }
 
   /**
+   * TODO: Implementar este método
    * Funcion que calcula una nueva temperatura en base a
    * la anterior y el decaemiento usado.
    * @param temperatura, float con el valor actual 
@@ -39,27 +43,34 @@ public class RecocidoSimulado {
   }
 
   /**
+   * TODO: Implementar este método
    * Genera y devuelve la solucion siguiente dependiendo de su valor
    * y de la probabilidad de elegir una solucion peor
    * @param Solucion que sera usada como base para elegir a la siguiente
    * @return Solucion nueva
    */
   public Solucion seleccionarSiguienteSolucion(Solucion s) {
-    return new Solucion();
+    return s.siguienteSolucion();
   }
 
   /**
+   * TODO: Implementar este método
    * Ejecuta el algoritmo con los parametros con los que fue inicializado
    * devuelve una solucion.
    * @param
    * @return Solucion al problema
    */
   public Solucion ejecutar() {
-    return new Solucion();
+    Solucion solucion = solucionInicial;
+    for(int i = 0; i < iteraciones; i++) {
+      solucion = seleccionarSiguienteSolucion(solucion);
+    }
+    return solucion;
   }
 
   /**
    * Saca las coordenadas de un archivo de ciudades y la convierte en una lista de Ciudad.
+   * Posteriormente crea una Solucion a partir de esa lista.
    * 
    * Para el formato del archivo se puede visitar la siguiente página:
    * http://www.math.uwaterloo.ca/tsp/world/dj38.tsp
@@ -86,6 +97,6 @@ public class RecocidoSimulado {
       listaCiudades.add(ciudad);
     }
     fileReader.close();
-    solucionActual = new Solucion(listaCiudades);
+    solucionInicial = new Solucion(listaCiudades);
   }
 }
