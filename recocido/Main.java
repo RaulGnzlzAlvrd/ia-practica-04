@@ -11,7 +11,7 @@ import java.io.IOException;
 public class Main{
    	public static void main(String []args) {
     	int interaciones = 100; // Número de iteraciones que se van a hacer.
-        String filePath = "Djibouti.tsp"; // Nombre del archivo tsp con la lista de coordenadas de ciudades.
+        String filePath = "Test.tsp"; // Nombre del archivo tsp con la lista de coordenadas de ciudades.
         try {
         	RecocidoSimulado recocido = new RecocidoSimulado(filePath);
         	Solucion s = recocido.ejecutar();
