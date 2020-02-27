@@ -1,6 +1,7 @@
 package recocido;
 
 import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -49,7 +50,20 @@ public class Solucion {
    * @return evaluacion de la solucion
    */
   public float evaluar() {
-    return 0;
+    valor = evaluarAux(new LinkedList<Ciudad>(listaCiudades));
+    valor += listaCiudades.getFirst().calculaDistancia(listaCiudades.getLast());
+    return valor;
+  }
+
+  private float evaluarAux(LinkedList<Ciudad> listaCiudades) {
+    if(listaCiudades.size() == 1) {
+      return 0;
+    } else {
+      Ciudad c1 = listaCiudades.get(0);
+      Ciudad c2 = listaCiudades.get(1);
+      listaCiudades.pop();
+      return c1.calculaDistancia(c2) + evaluarAux(listaCiudades);
+    }
   }
   
   /**
@@ -60,6 +74,7 @@ public class Solucion {
     String s = "Solución: \n";
     for(Ciudad ciudad : listaCiudades)
       s += ciudad.toString() + "\n";
+    s += "Valor: " + valor;
     return s;
   }
 
@@ -77,6 +92,8 @@ public class Solucion {
       size--;
     }
     listaCiudades = nuevaLista;
+
+    valor = evaluar();
   }
 
   /**
@@ -92,5 +109,7 @@ public class Solucion {
     Ciudad c1 = listaCiudades.get(index1);
     listaCiudades.set(index1, listaCiudades.get(index2));
     listaCiudades.set(index2, c1);
+
+    valor = evaluar();
   }
 }

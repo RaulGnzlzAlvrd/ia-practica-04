@@ -6,11 +6,9 @@ package recocido;
  * @version 1.0
  */
 public class Ciudad {
-	double x; // Coordenada x
-	double y; // Coordenada y
+	float x; // Coordenada x
+	float y; // Coordenada y
 	int numeroCiudad; // Identificador de la ciudad
-
-	public Ciudad() {}
 
 	/**
 	 * Constructor de la Ciudad basandose en las coordendas e identificador
@@ -18,10 +16,23 @@ public class Ciudad {
 	 * @param y Coordenada Y de la ciudad
 	 * @param numeroCiudad Identificador de la ciudad
 	 */
-	public Ciudad(double x, double y, int numeroCiudad) {
+	public Ciudad(float x, float y, int numeroCiudad) {
 		this.x = x;
 		this.y = y;
 		this.numeroCiudad = numeroCiudad;
+	}
+
+	/**
+	 * Obtiene la distancia entre la Ciudad (this) y la ciudad pasada como parámetro
+	 * @param ciudad La ciudad de la que se quiere sacar su distancia.
+	 * @return La distancia entre las dos ciudades
+	 */
+	public float calculaDistancia(Ciudad otra) {
+		float x1 = this.x;
+		float y1 = this.y;
+		float x2 = otra.x;
+		float y2 = otra.y;
+		return (float) (Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
 	}
 
 	/**

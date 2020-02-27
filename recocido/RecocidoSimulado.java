@@ -79,8 +79,8 @@ public class RecocidoSimulado {
     while (!(row = fileReader.readLine()).contains("NODE_COORD_SECTION")) {}
     while ((row = fileReader.readLine()) != null) {
       String[] data = row.split(" ");
-      double x = Double.parseDouble(data[1]); 
-      double y = Double.parseDouble(data[2]); 
+      float x = Float.parseFloat(data[1]); 
+      float y = Float.parseFloat(data[2]); 
       int id = Integer.parseInt(data[0]); 
       ciudad = new Ciudad(x, y, id);
       listaCiudades.add(ciudad);
