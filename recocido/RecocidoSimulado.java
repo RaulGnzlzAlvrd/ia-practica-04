@@ -1,6 +1,7 @@
 package recocido;
 
 import java.util.Random;
+import java.util.LinkedList;
 
 /**
  * Interface con los metodos necesarios para implementar el metodo
@@ -11,17 +12,19 @@ import java.util.Random;
  */
 public class RecocidoSimulado {
 
-  private float temperaturaInicial;
-  private float factorDeEnfriamiento;
-  private float temperaturaFinal;
+  private float temperaturaInicial; // Guarda la temperatura que se tendrá al inicio de cada iteración
+  private float temperaturaFinal; // Guarda la temperatura a la que se detendrá cada iteración
+  private float factorDeEnfriamiento; // Guarda el factor por el que se va a multiplicar la temperatura.
   
-  private int iteraciones;
-  private float temperatura;
+  private int iteraciones; // Número de iteraciones para la ejecución.
+  private float temperatura; // Temperatura que se modificará a lo largo de cada iteración
 
   Solucion solucionInicial; // Solución con la que inicia la iteración.
   Solucion mejorSolucion; // La mejor solución obtenidad a lo largo de todas las iteraciones.
 
-  Random rnd = new Random();
+  LinkedList<Float>[] historial; // Lista con el historial de los valores de las soluciones que se han calculado.
+  
+  Random rnd = new Random(); // Auxiliar para decisiones al azar.
 
   /**
    * Inicializa los valores necesarios para realizar 
@@ -45,6 +48,11 @@ public class RecocidoSimulado {
     this.temperaturaInicial = temperaturaInicial;
     this.temperaturaFinal = temperaturaFinal;
     this.factorDeEnfriamiento = factorDeEnfriamiento;
+
+    historial = new LinkedList[iteraciones];
+    for(int i = 0; i < iteraciones; i++)
+      if(historial[i] == null)
+        historial[i] = new LinkedList<Float>();
   }
 
   /**
@@ -97,10 +105,21 @@ public class RecocidoSimulado {
       solucion.shuffle();
       temperatura = temperaturaInicial;
       while(temperatura > temperaturaFinal){
+        historial[i].add(solucion.valor);
         solucion = seleccionarSiguienteSolucion(solucion);
         actualizarTemperatura();
       }
     }
     return mejorSolucion;
+  }
+
+  /**
+   * Regresa el historial de los valores de cada solución.
+   * Es un array que contien en la posición i una lista con los valores calculados en la iteración i.
+   *
+   * @return Array con las listas correspondientes a cada iteración. 
+   */
+  public LinkedList<Float>[] getHistorial() {
+    return historial;
   }
 }

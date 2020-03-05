@@ -21,7 +21,7 @@ public class Solucion {
    * Metodo constructor de una solucion a un problema, inicializa con una lista de Ciudades.
    */
   public Solucion(LinkedList<Ciudad> listaCiudades) {
-    this.listaCiudades = new LinkedList(listaCiudades);
+    this.listaCiudades = new LinkedList<Ciudad>(listaCiudades);
     this.valor = evaluar();
   }
 
@@ -29,7 +29,7 @@ public class Solucion {
    * Metodo constructor de una solucion a un problema, inicializa con otra solucion.
    */
   public Solucion(Solucion solucion) {
-    this.listaCiudades = new LinkedList(solucion.listaCiudades);
+    this.listaCiudades = new LinkedList<Ciudad>(solucion.listaCiudades);
     this.valor = evaluar();
   }
 

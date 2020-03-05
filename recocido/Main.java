@@ -14,10 +14,10 @@ public class Main{
             String filePath = "Djibouti.tsp"; // Nombre del archivo tsp con la lista de coordenadas de ciudades.
             LinkedList<Ciudad> listaCiudades = TSPReader.readFile(filePath);
             Solucion solucionInicial = new Solucion(listaCiudades);
-            int iteraciones = 10; // Número de iteraciones que se van a hacer.
-            float temperaturaInicial = (float) Math.E + 10f;
-            float temperaturaFinal = 0.1f;
-            float factorDeEnfriamiento = 0.99995f;
+            int iteraciones = 100; // Número de iteraciones que se van a hacer.
+            float temperaturaInicial = (float) Math.sqrt(listaCiudades.size());
+            float temperaturaFinal = (float) Math.pow(10, -8);
+            float factorDeEnfriamiento = 0.995f;
 
         	RecocidoSimulado recocido = new RecocidoSimulado(
                 solucionInicial, 
@@ -27,7 +27,18 @@ public class Main{
                 factorDeEnfriamiento
             );
         	Solucion solucion = recocido.ejecutar();
-        	System.out.println(solucion);
+
+            /*
+            LinkedList<Float>[] historial = recocido.getHistorial();
+            for(LinkedList<Float> iteracion : historial) {
+                System.out.println("----------------------------------------------------");
+                System.out.println("Nueva Iteración");
+                for(Float valor : iteracion) {
+                    System.out.println(valor);
+                }
+            }
+            */
+            System.out.println(solucion);
         } catch (IOException ioe) {
         	System.out.println("No se pudo leer el archivo.\n" + ioe);
         }
