@@ -1,7 +1,5 @@
 package recocido;
 
-import java.io.*;
-import java.util.LinkedList;
 import java.util.Random;
 
 /**
@@ -12,12 +10,13 @@ import java.util.Random;
  * @version 0.1
  */
 public class RecocidoSimulado {
-  private final float TEMPERATURA_INICIAL = (float) (Math.E + 10);
-  private final float TEMPERATURA_FINAL = 0.1f;
-  private final float FACTOR_DE_ENFRIAMIENTO = 0.99995f;
 
-  float temperatura = TEMPERATURA_INICIAL;
-  int iteraciones;
+  private float temperaturaInicial;
+  private float factorDeEnfriamiento;
+  private float temperaturaFinal;
+  
+  private int iteraciones;
+  private float temperatura;
 
   Solucion solucionInicial; // Solución con la que inicia la iteración.
   Solucion mejorSolucion; // La mejor solución obtenidad a lo largo de todas las iteraciones.
@@ -27,13 +26,25 @@ public class RecocidoSimulado {
   /**
    * Inicializa los valores necesarios para realizar 
    * recocido simulado durante un numero determinado de iteraciones
+   * @param solucionInicial La una solución cualquiera para el problema.
    * @param iteraciones El numero de iteraciones que se va a ejecutar el algoritmo
-   * @param filePath El nombre del archivo del que va a sacar las coordenadas de las ciudades
+   * @param temperaturaInicial La temperatura con la que empezará cada iteración
+   * @param temperaturaFinal La temperatura con la que finalizará cada iteración
+   * @param factorDeEnfriamiento El factor por el que se va a multiplicar la temperatura en cada iteración (Entre cero y uno)
    */
-  public RecocidoSimulado(int iteraciones, String filePath) throws IOException {
-    inicializaLista(filePath);
+  public RecocidoSimulado(
+    Solucion solucionInicial, 
+    int iteraciones, 
+    float temperaturaInicial, 
+    float temperaturaFinal, 
+    float factorDeEnfriamiento
+  ) {
+    this.solucionInicial = solucionInicial;
     mejorSolucion = solucionInicial;
     this.iteraciones = iteraciones;
+    this.temperaturaInicial = temperaturaInicial;
+    this.temperaturaFinal = temperaturaFinal;
+    this.factorDeEnfriamiento = factorDeEnfriamiento;
   }
 
   /**
@@ -41,7 +52,7 @@ public class RecocidoSimulado {
    * la anterior y el factor de enfriamiento usado.
    */
   public void actualizarTemperatura() {
-    temperatura *= FACTOR_DE_ENFRIAMIENTO;
+    temperatura *= factorDeEnfriamiento;
   }
 
   /**
@@ -84,44 +95,12 @@ public class RecocidoSimulado {
     for(int i = 0; i < iteraciones; i++) {
       Solucion solucion = new Solucion(solucionInicial);
       solucion.shuffle();
-      temperatura = TEMPERATURA_INICIAL;
-      while(temperatura > TEMPERATURA_FINAL){
+      temperatura = temperaturaInicial;
+      while(temperatura > temperaturaFinal){
         solucion = seleccionarSiguienteSolucion(solucion);
         actualizarTemperatura();
       }
     }
     return mejorSolucion;
-  }
-
-  /**
-   * Saca las coordenadas de un archivo de ciudades y la convierte en una lista de Ciudad.
-   * Posteriormente crea una Solucion a partir de esa lista.
-   * 
-   * Para el formato del archivo se puede visitar la siguiente página:
-   * http://www.math.uwaterloo.ca/tsp/world/dj38.tsp
-   * @param filePath Path del archivo donde se está sacando los datos de las ciudades
-   * @return
-   */
-  private void inicializaLista(String filePath) throws IOException {
-    File file = new File(filePath);
-    if(!file.exists()) {
-      throw new IOException("Archivo no encontrado.");
-    }
-
-    LinkedList<Ciudad> listaCiudades = new LinkedList<>();
-    BufferedReader fileReader = new BufferedReader(new FileReader(file));
-    String row;
-    Ciudad ciudad;
-    while (!(row = fileReader.readLine()).contains("NODE_COORD_SECTION")) {}
-    while ((row = fileReader.readLine()) != null) {
-      String[] data = row.split(" ");
-      float x = Float.parseFloat(data[1]); 
-      float y = Float.parseFloat(data[2]); 
-      int id = Integer.parseInt(data[0]); 
-      ciudad = new Ciudad(x, y, id);
-      listaCiudades.add(ciudad);
-    }
-    fileReader.close();
-    solucionInicial = new Solucion(listaCiudades);
   }
 }
